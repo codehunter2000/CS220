@@ -72,9 +72,14 @@ public class SymbolTable
 		return symbolTable.containsKey(symbol);
 	}
 	
-	public boolean addEntry(String symbol, int address)
+	public boolean addEntry(String symbol, int address) throws Exception
 	{
 		boolean toReturn;
+		
+		if(SymbolTable.isValidName(symbol) == false)
+		{
+			throw new Exception("Invalid variable name.");
+		}
 		
 		if (SymbolTable.contains(symbol))
 			toReturn = false;
@@ -100,15 +105,15 @@ public class SymbolTable
 		return address;
 	}
 	
-	private boolean isValidName(String symbol)
+	private static boolean isValidName(String symbol)
 	{
 		boolean isValid = true;
 		
 		for (int i = 0; i < symbol.length(); i++)
 		{
-			
+			if (!ALL_VALID_CHARS.contains(symbol.substring(i-1, i)));
+				isValid = false;
 		}
-		
 		
 		return isValid;
 	}
