@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class SymbolTable 
 {
 	private static final String INITIAL_VALID_CHARS = "SP LCL ARG THIS THAT R0 R1 R2 R3 R4 R6 R7 R8 R9 R10 R11 R12 R13 R14 R15 SCREEN KBD";
-	private static final String ALL_VALID_CHARS = INITIAL_VALID_CHARS + "0, 1, 2, 3, 4, 5, 6, 7, 8, 9";
-	private HashMap<String, Integer> symbolTable;
+	private static final String ALL_VALID_CHARS = INITIAL_VALID_CHARS + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0, 1, 2, 3, 4, 5, 6, 7, 8, 9";
+	private static HashMap<String, Integer> symbolTable;
 	
 	SymbolTable()
 	{
@@ -63,5 +63,53 @@ public class SymbolTable
 			else if (theLetters.equals("KBD"))
 				symbolTable.put(theLetters, 24576);
 		}
+		
+		readLetters.close();
+	}
+	
+	public static boolean contains(String symbol)
+	{
+		return symbolTable.containsKey(symbol);
+	}
+	
+	public boolean addEntry(String symbol, int address)
+	{
+		boolean toReturn;
+		
+		if (SymbolTable.contains(symbol))
+			toReturn = false;
+		else
+		{
+			symbolTable.put(symbol, address);
+			toReturn = true;
+		}
+		
+		return toReturn;
+	}
+	
+	public int getAddress(String symbol)
+	{
+		int address;
+		
+		if (!SymbolTable.contains(symbol))
+			address = -1;
+		
+		else
+			address = symbolTable.get(symbol);
+		
+		return address;
+	}
+	
+	private boolean isValidName(String symbol)
+	{
+		boolean isValid = true;
+		
+		for (int i = 0; i < symbol.length(); i++)
+		{
+			
+		}
+		
+		
+		return isValid;
 	}
 }
