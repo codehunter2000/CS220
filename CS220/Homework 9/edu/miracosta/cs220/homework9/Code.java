@@ -69,4 +69,25 @@ public class Code
 	{
 		return jumpCodes.get(mnemonic);
 	}
+	
+	public static String decimalToBinary(int decimal)
+	{
+		StringBuilder binary = new StringBuilder();
+		
+		while (decimal>=0)
+		{
+			binary.insert(0, decimal%2);
+			decimal = decimal/2;
+		}
+		
+		int diff = 16-binary.length();
+		if (diff == 0)
+			return binary.toString();
+		for (int i = diff; i <= 16; i++)
+		{
+			binary.insert(0, 0);
+		}
+		
+		return binary.toString();
+	}
 }
