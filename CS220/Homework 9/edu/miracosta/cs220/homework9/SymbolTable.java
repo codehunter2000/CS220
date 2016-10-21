@@ -28,7 +28,40 @@ public class SymbolTable
 				symbolTable.put(theLetters, 4);
 			else if (theLetters.equals("R0"))
 				symbolTable.put(theLetters, 0);
-			
+			else if (theLetters.equals("R1"))
+				symbolTable.put(theLetters, 1);
+			else if (theLetters.equals("R2"))
+				symbolTable.put(theLetters, 2);
+			else if (theLetters.equals("R3"))
+				symbolTable.put(theLetters, 3);
+			else if (theLetters.equals("R4"))
+				symbolTable.put(theLetters, 4);
+			else if (theLetters.equals("R5"))
+				symbolTable.put(theLetters, 5);
+			else if (theLetters.equals("R6"))
+				symbolTable.put(theLetters, 6);
+			else if (theLetters.equals("R7"))
+				symbolTable.put(theLetters, 7);
+			else if (theLetters.equals("R8"))
+				symbolTable.put(theLetters, 8);
+			else if (theLetters.equals("R9"))
+				symbolTable.put(theLetters, 9);
+			else if (theLetters.equals("R10"))
+				symbolTable.put(theLetters, 10);
+			else if (theLetters.equals("R11"))
+				symbolTable.put(theLetters, 11);
+			else if (theLetters.equals("R12"))
+				symbolTable.put(theLetters, 12);
+			else if (theLetters.equals("R13"))
+				symbolTable.put(theLetters, 13);
+			else if (theLetters.equals("R14"))
+				symbolTable.put(theLetters, 14);
+			else if (theLetters.equals("R15"))
+				symbolTable.put(theLetters, 15);
+			else if (theLetters.equals("SCREEN"))
+				symbolTable.put(theLetters, 16384);
+			else if (theLetters.equals("KBD"))
+				symbolTable.put(theLetters, 24576);
 		}
 	}
 }
