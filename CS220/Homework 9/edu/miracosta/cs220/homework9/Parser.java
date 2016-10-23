@@ -38,12 +38,15 @@ public class Parser
 		}
 	}
 	
-	public void advance()
+	public void advance() throws Exception
 	{
 		if (inputFile.hasNextLine())
 		{
 			lineNumber++;
 			rawLine = inputFile.nextLine();
+			cleanLine();
+			parseCommandType();
+			parse();
 		}
 	}
 	
@@ -63,31 +66,29 @@ public class Parser
 	private void parseCommandType()
 	{
 		if(rawLine.charAt(0) == '@')
-			commandType = 'A';
+			commandType = A_COMMAND;
 		else if (rawLine.charAt(0) == '(')
-			commandType = 'L';
+			commandType = L_COMMAND;
 		else if (rawLine.length() == 0)
-			commandType = 'N';
+			commandType = NO_COMMAND;
 		else
-			commandType = 'C';			
+			commandType = C_COMMAND;			
 	}
 	
-	private void parse()
+	private void parse() throws Exception
 	{
-		try
-		{
-			if (commandType == 'N')
+		if (commandType == NO_COMMAND)
 			{
 				symbol = null;
 				destMnemonic = null;
 				compMnemonic = null;
 				jumpMnemonic = null;
 			}
-			else if (commandType == 'A')
+			else if (commandType == A_COMMAND)
 				parseSymbol();
-			else if (commandType == 'L')
+			else if (commandType == L_COMMAND)
 				parseSymbol();
-			else if (commandType == 'C')
+			else if (commandType == C_COMMAND)
 				{
 					parseDest();
 					if (cleanLine.contains("="))
@@ -95,32 +96,17 @@ public class Parser
 					else if (cleanLine.contains(";"))
 						parseJump();
 				}
-		}
-		
-		catch (Exception e)
-		{
-			e.getMessage();
-		}
-		
 	}
 	
 	private void parseSymbol() throws Exception
 	{
-		try
-		{
-			if (cleanLine.contains("@"))
+		if (cleanLine.contains("@"))
 		
 			symbol = cleanLine.substring(1, cleanLine.length()-1);
 		else if (cleanLine.contains("(") && cleanLine.contains(")"))
 				symbol = cleanLine.substring(1, cleanLine.length()-2);
 		else
 			throw new Exception(" /' ) /' expected.");
-		}
-		
-		catch(Exception e)
-		{
-			e.getMessage();
-		}
 	}
 	
 	private void parseDest()

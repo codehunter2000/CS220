@@ -53,6 +53,11 @@ public class Assembler {
 		}
 		
 		// TODO: finish driver as algorithm describes
+		
+		symbolTable = new SymbolTable();
+		romAddress = 0;
+		firstPass(inputFileName, symbolTable);
+		secondPass(inputFileName, symbolTable, outputFile);
 	}
 	
 	// TODO: march through the source code without generating any code
@@ -60,8 +65,32 @@ public class Assembler {
 		// add the pair <LABEL, n> to the symbol table
 		// n = romAddress which you should keep track of as you go through each line
 	//HINT: when should rom address increase? What kind of commands?
-	private static void firstPass(String inputFileName, SymbolTable symbolTable) {
-
+	private static void firstPass(String inputFileName, SymbolTable symbolTable) 
+	{
+		try
+		{
+			Parser inputStream = new Parser(inputFileName);
+			String label;
+			int location;	// line number
+			while (inputStream.hasMoreCommands())
+			{
+				inputStream.advance();
+				if (inputStream.getCommandType() == 'L')
+				{
+					label = inputStream.getSymbol();
+					location = inputStream.getLineNumber();
+					symbolTable.addEntry(label, location);
+					
+				
+				
+				}
+			}
+		}
+		
+		catch(Exception e)
+		{
+			e.getMessage();
+		}
 	}
 	
 	// TODO: march again through the source code and process each line:
@@ -76,8 +105,61 @@ public class Assembler {
 				//	available RAM address, and complete the commands translation
 	// HINT: when should rom address increase?  What should ram address start
 	// at? When should it increase?  What do you do with L commands and No commands?
-	private static void secondPass(String inputFileName, SymbolTable symbolTable, PrintWriter outputFile) {
-
+	private static void secondPass(String inputFileName, SymbolTable symbolTable, PrintWriter outputFile) 
+	{
+		try
+		{
+			Parser inputStream = new Parser(inputFileName);
+			Code codes = new Code();
+			String compMnemonic, destMnemonic, jumpMnemonic, symbol, numValue, symValue;
+			StringBuilder output = new StringBuilder();
+			char type;
+			int val, address = 0;
+			while (inputStream.hasMoreCommands())
+			{
+				inputStream.advance();
+				type = inputStream.getCommandType();
+				if (type == 'C')
+				{
+					output.append("111");
+					compMnemonic = inputStream.getComp();
+					output.append(codes.getComp(compMnemonic));
+					destMnemonic = inputStream.getDest();
+					output.append(codes.getDest(destMnemonic));
+					output.append("000");
+				}
+				
+				if (type == 'A')
+				{
+					try
+					{
+						symbol = inputStream.getSymbol();
+						val = Integer.parseInt(symbol);
+						numValue = codes.decimalToBinary(val);
+						outputFile.print(numValue);
+					}
+					catch (Exception e)
+					{
+						symbol = inputStream.getSymbol();
+						if (symbolTable.contains(symbol))
+							address = symbolTable.getAddress(symbol);
+						else 
+						{
+							symbolTable.addEntry(symbol, address);
+						}
+					}
+				}
+				
+				outputFile.println(output.toString());
+			}
+			
+			outputFile.close();
+		}
+		
+		catch (Exception e)
+		{
+			e.getMessage();
+		}
 	}
 	
 
