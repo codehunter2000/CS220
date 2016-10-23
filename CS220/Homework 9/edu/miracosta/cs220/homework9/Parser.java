@@ -18,7 +18,7 @@ public class Parser
 	public Parser(String inFileName)
 	{
 		inputFile = new Scanner(inFileName);
-		lineNumber = 0;
+		lineNumber = -1;
 		rawLine = null;
 		cleanLine = null;
 		symbol = null;
@@ -42,8 +42,8 @@ public class Parser
 	{
 		if (inputFile.hasNextLine())
 		{
-			rawLine = inputFile.nextLine();
 			lineNumber++;
+			rawLine = inputFile.nextLine();
 		}
 	}
 	
