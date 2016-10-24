@@ -74,13 +74,13 @@ public class Code
 	{
 		StringBuilder binary = new StringBuilder();
 		
-		while (decimal>=0)
+		while (decimal>=1)
 		{
 			binary.insert(0, decimal%2);
 			decimal = decimal/2;
 		}
 		
-		int diff = 16-binary.length();
+		int diff = 16 - binary.length()-1;
 		if (diff == 0)
 			return binary.toString();
 		for (int i = diff; i <= 16; i++)

@@ -1,4 +1,6 @@
 package edu.miracosta.cs220.homework9;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class Parser 
 {
@@ -17,7 +19,14 @@ public class Parser
 	
 	public Parser(String inFileName)
 	{
-		inputFile = new Scanner(inFileName);
+		FileInputStream inputStream;
+		try {
+			inputStream = new FileInputStream(inFileName);
+			inputFile = new Scanner(inputStream);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		lineNumber = -1;
 		rawLine = null;
 		cleanLine = null;
@@ -56,11 +65,12 @@ public class Parser
 		commentLocation = rawLine.indexOf("//");
 		
 		if (commentLocation != -1)
-			rawLine = rawLine.substring(0, commentLocation);
+			cleanLine = rawLine.substring(0, commentLocation);
 		
-		rawLine = rawLine.trim();
-		rawLine = rawLine.replaceAll("//", "");
-		rawLine = rawLine.replaceAll(" ", "");
+		cleanLine = rawLine.trim();
+		cleanLine = cleanLine.replaceAll("//", "");
+		cleanLine = cleanLine.replaceAll(" ", "");
+//		System.out.println("Clean line: " + cleanLine);
 	}
 	
 	private void parseCommandType()
@@ -101,12 +111,17 @@ public class Parser
 	private void parseSymbol() throws Exception
 	{
 		if (cleanLine.contains("@"))
-		
-			symbol = cleanLine.substring(1, cleanLine.length()-1);
+		{
+			symbol = cleanLine.substring(1, cleanLine.length());
+		}
 		else if (cleanLine.contains("(") && cleanLine.contains(")"))
-				symbol = cleanLine.substring(1, cleanLine.length()-2);
+		{
+				symbol = cleanLine.substring(1, cleanLine.length());
+		}
 		else
+		{
 			throw new Exception(" /' ) /' expected.");
+		}
 	}
 	
 	private void parseDest()
@@ -116,25 +131,29 @@ public class Parser
 		{
 			stop = cleanLine.indexOf("=");
 			destMnemonic = cleanLine.substring(0, stop);
+//			System.out.println("Dest Mnemonic: " + destMnemonic);
 		}
 		
 		else if (cleanLine.contains(";"))
 		{
 			stop = cleanLine.indexOf(";");
 			destMnemonic = cleanLine.substring(0, stop);
+//			System.out.println("Dest Mnemonic: " + destMnemonic);
 		}
 	}
 	
 	private void parseComp()
 	{
 		int start = cleanLine.indexOf("=");
-		compMnemonic = cleanLine.substring(start, cleanLine.length()-1);
+		compMnemonic = cleanLine.substring(start+1, cleanLine.length());
+//		System.out.println("Comp Mnemonic: " + compMnemonic);
 	}
 	
 	private void parseJump()
 	{
 		int start = cleanLine.indexOf(";");
-		jumpMnemonic = cleanLine.substring(start, cleanLine.length()-1);
+		jumpMnemonic = cleanLine.substring(start+1, cleanLine.length()-1);
+//		System.out.println("Jump Mnemonic: " + jumpMnemonic);
 	}
 	
 	public char getCommandType()

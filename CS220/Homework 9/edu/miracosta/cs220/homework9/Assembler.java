@@ -1,6 +1,6 @@
 package edu.miracosta.cs220.homework9;
 
-//Author info here
+
 //TODO: don't forget to document each method in all classes!
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
@@ -58,6 +58,8 @@ public class Assembler {
 		romAddress = 0;
 		firstPass(inputFileName, symbolTable);
 		secondPass(inputFileName, symbolTable, outputFile);
+		outputFile.close();
+		System.out.println("Done");
 	}
 	
 	// TODO: march through the source code without generating any code
@@ -80,16 +82,13 @@ public class Assembler {
 					label = inputStream.getSymbol();
 					location = inputStream.getLineNumber();
 					symbolTable.addEntry(label, location);
-					
-				
-				
 				}
 			}
 		}
 		
 		catch(Exception e)
 		{
-			e.getMessage();
+//			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -111,7 +110,7 @@ public class Assembler {
 		{
 			Parser inputStream = new Parser(inputFileName);
 			Code codes = new Code();
-			String compMnemonic, destMnemonic, jumpMnemonic, symbol, numValue, symValue;
+			String compMnemonic, destMnemonic, jumpMnemonic, symbol, numValue, symValue, toPrint;
 			StringBuilder output = new StringBuilder();
 			char type;
 			int val, address = 0;
@@ -122,46 +121,58 @@ public class Assembler {
 				if (type == 'C')
 				{
 					output.append("111");
-					compMnemonic = inputStream.getComp();
-					output.append(codes.getComp(compMnemonic));
-					destMnemonic = inputStream.getDest();
-					output.append(codes.getDest(destMnemonic));
-					output.append("000");
+					if (inputStream.getCleanLine().contains("="))
+					{
+						compMnemonic = inputStream.getComp();
+						System.out.println("Comp Mnemonic: " + compMnemonic);
+						output.append(codes.getComp(compMnemonic));
+						destMnemonic = inputStream.getDest();
+						System.out.println("Dest Mnemonic: " + destMnemonic);
+						output.append(codes.getDest(destMnemonic));
+						output.append("000");
+						toPrint = output.toString();
+						outputFile.println(toPrint);
+						outputFile.flush();
+					}
+					else if (inputStream.getCleanLine().contains(";"))
+					{
+						
+					}
 				}
 				
-				if (type == 'A')
+				else if (type == 'A')
 				{
 					try
 					{
 						symbol = inputStream.getSymbol();
+//						System.out.println("Symbol: " + symbol);
 						val = Integer.parseInt(symbol);
 						numValue = codes.decimalToBinary(val);
-						outputFile.print(numValue);
+						System.out.println("Value : " + numValue);
+						outputFile.println(numValue);
+						outputFile.flush();
 					}
-					catch (Exception e)
+					catch (NumberFormatException e)
 					{
 						symbol = inputStream.getSymbol();
 						if (symbolTable.contains(symbol))
+						{
 							address = symbolTable.getAddress(symbol);
+							outputFile.println(address);
+						}
+						
 						else 
 						{
-							symbolTable.addEntry(symbol, address);
+							// Need to assign RAM storage location before adding to hashmap
 						}
 					}
 				}
-				
-				outputFile.println(output.toString());
 			}
-			
-			outputFile.close();
 		}
 		
 		catch (Exception e)
 		{
-			e.getMessage();
+//			System.out.println(e.getMessage());
 		}
 	}
-	
-
-
 }
