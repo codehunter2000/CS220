@@ -136,7 +136,16 @@ public class Assembler {
 					}
 					else if (inputStream.getCleanLine().contains(";"))
 					{
-						
+						destMnemonic = inputStream.getDest();
+						System.out.println("Dest Mnemonic: " + destMnemonic);
+						output.append(codes.getDest(destMnemonic));
+						output.append("000");
+						jumpMnemonic = inputStream.getJump();
+						System.out.println("JUmp Mnemonic: " + jumpMnemonic);
+						output.append(codes.getJump(jumpMnemonic));
+						toPrint = output.toString();
+						outputFile.println(toPrint);
+						outputFile.flush();
 					}
 				}
 				

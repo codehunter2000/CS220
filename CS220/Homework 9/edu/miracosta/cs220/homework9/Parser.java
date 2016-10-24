@@ -152,7 +152,7 @@ public class Parser
 	private void parseJump()
 	{
 		int start = cleanLine.indexOf(";");
-		jumpMnemonic = cleanLine.substring(start+1, cleanLine.length()-1);
+		jumpMnemonic = cleanLine.substring(start+1, cleanLine.length());
 //		System.out.println("Jump Mnemonic: " + jumpMnemonic);
 	}
 	
