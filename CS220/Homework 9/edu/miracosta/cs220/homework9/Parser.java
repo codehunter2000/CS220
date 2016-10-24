@@ -75,12 +75,12 @@ public class Parser
 	
 	private void parseCommandType()
 	{
-		if(rawLine.charAt(0) == '@')
+		if (rawLine.length() == 0)
+			commandType = NO_COMMAND;
+		else if(rawLine.charAt(0) == '@')
 			commandType = A_COMMAND;
 		else if (rawLine.charAt(0) == '(')
 			commandType = L_COMMAND;
-		else if (rawLine.length() == 0)
-			commandType = NO_COMMAND;
 		else
 			commandType = C_COMMAND;			
 	}
