@@ -5,9 +5,8 @@ import java.io.PrintWriter;
 
 public class CodeWriter 
 {
-	private String fileLocation;
+	private String fileLocation, fileName;
 	private PrintWriter outputStream;
-	private Parser parser;
 	private int labelCounter;
 	
 	public CodeWriter(String file)
@@ -16,9 +15,27 @@ public class CodeWriter
 		{
 			fileLocation = file;
 			outputStream = new PrintWriter(fileLocation);
-			parser = new Parser();
 			labelCounter = 1;
-			
+			int start, index = fileLocation.length() - 1;
+			char letter;
+			if (fileLocation.contains("/") || fileLocation.contains("\\"))
+			{
+				while(index > 0)
+				{
+					letter = fileLocation.charAt(index);
+					if (letter == '/' || letter == '\\')
+					{
+						start = index + 1;
+						fileName = fileLocation.substring(start);
+						break;
+					}
+					index--;
+				}
+			}
+			else
+			{
+				fileName = fileLocation;
+			}
 		} 
 		
 		catch (FileNotFoundException e) 
@@ -151,7 +168,43 @@ public class CodeWriter
 		
 		else if (command.contains("lt"))
 		{
-			
+			String line1 = "@SP";
+			String line2 = "A = M - 1";
+			String line3 = "A = A - 1";
+			String line4 = "D = M";
+			String line5 = "A = A + 1";
+			String line6 = "D = D - M";
+			String line7 = "@_" + labelCounter;
+			String line8 = "D;JLT";
+			String line9 = "@_" + labelCounter+1;
+			String line10 = "D = 0";
+			String line11 = "0;JMP";
+			String line12 = "(_" + labelCounter + ")";
+			labelCounter++;
+			String line13 = "D = -1";
+			String line14 = "(_" + labelCounter + ")";
+			String line15 = "@SP";
+			String line16 = "AM = M - 1";
+			String line17 = "A = A - 1";
+			String line18 = "M = D";
+			outputStream.println(line1);
+			outputStream.println(line2);
+			outputStream.println(line3);
+			outputStream.println(line4);
+			outputStream.println(line5);
+			outputStream.println(line6);
+			outputStream.println(line7);
+			outputStream.println(line8);
+			outputStream.println(line9);
+			outputStream.println(line10);
+			outputStream.println(line11);
+			outputStream.println(line12);
+			outputStream.println(line13);
+			outputStream.println(line14);
+			outputStream.println(line15);
+			outputStream.println(line16);
+			outputStream.println(line17);
+			outputStream.println(line18);
 		}
 		
 		else if (command.contains("and"))
@@ -178,7 +231,12 @@ public class CodeWriter
 			String line4 = "D = M";
 			String line5 = "A = A + 1";
 			String line6 = "D = D|M";
-			
+			outputStream.println(line1);
+			outputStream.println(line2);
+			outputStream.println(line3);
+			outputStream.println(line4);
+			outputStream.println(line5);
+			outputStream.println(line6);
 		}
 		
 		else if (command.contains("not"))
@@ -186,6 +244,9 @@ public class CodeWriter
 			String line1 = "@SP";
 			String line2 = "A = A - 1";
 			String line3 = "D = !M";
+			outputStream.println(line1);
+			outputStream.println(line2);
+			outputStream.println(line3);
 		}
 	}
 	
@@ -209,28 +270,33 @@ public class CodeWriter
 				outputStream.println(line6);
 			}
 			
-			else if (segment.contains("local"))
+			else if (segment.contains("static"))
 			{
-				
+				String line1 = "@" + fileName + "." + index;
+				String line2 = "D = M";
+				String line3 = "@SP";
+				String line4 = "AM = M + 1";
+				String line5 = "A = A - 1";
+				String line6 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
 			}
 			
-			else if (segment.contains("argument"))
+			else if (segment.contains("local"))
 			{
-				
-			}
-		}
-		
-		else if (command.contains("pop"))
-		{
-			if (segment.contains("local"))
-			{
-				String line1 = "@SP";
-				String line2 = "AM = M - 1";
-				String line3 = "D = M";
-				String line4 = "@LCL";
-				String line5 = "A = M + 1";
-				String line6 = "A = A + 1";
-				String line7 = "M = D";
+				String line1 = "@LCL";
+				String line2 = "D = M";
+				String line3 = "@" + index;
+				String line4 = "A = D + A";
+				String line5 = "D = M";
+				String line6 = "@SP";
+				String line7 = "AM = M + 1";
+				String line8 = "A = A - 1";
+				String line9 = "M = D";
 				outputStream.println(line1);
 				outputStream.println(line2);
 				outputStream.println(line3);
@@ -238,20 +304,235 @@ public class CodeWriter
 				outputStream.println(line5);
 				outputStream.println(line6);
 				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
 			}
 			
-			else if (segment.contains("static"))
+			else if (segment.contains("argument"))
 			{
-				String line1 = "@SP";
-				String line2 = "AM = M - 1";
-				String line3 = "D = M";
-				String line4 = "@f." + index;
-				String line5 = "M = D";
+				String line1 = "@ARG";
+				String line2 = "D = M";
+				String line3 = "@" + index;
+				String line4 = "A = D + A";
+				String line5 = "D = M";
+				String line6 = "@SP";
+				String line7 = "AM = M + 1";
+				String line8 = "A = A - 1";
+				String line9 = "M = D";
 				outputStream.println(line1);
 				outputStream.println(line2);
 				outputStream.println(line3);
 				outputStream.println(line4);
 				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+			}
+			
+			else if (segment.contains("this"))
+			{
+				String line1 = "@THIS";
+				String line2 = "D = M";
+				String line3 = "@" + index;
+				String line4 = "A = D + A";
+				String line5 = "D = M";
+				String line6 = "@SP";
+				String line7 = "AM = M + 1";
+				String line8 = "A = A - 1";
+				String line9 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+			}
+			
+			else if (segment.contains("that"))
+			{
+				String line1 = "@THAT";
+				String line2 = "D = M";
+				String line3 = "@" + index;
+				String line4 = "A = D + A";
+				String line5 = "D = M";
+				String line6 = "@SP";
+				String line7 = "AM = M + 1";
+				String line8 = "A = A - 1";
+				String line9 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+			}
+		}
+		
+		else if (command.contains("pop"))
+		{
+			if (segment.contains("local"))
+			{
+				// Access Local
+				String line1 = "@LCL";
+				// Store address value in D
+				String line2 = "D = M";
+				// Get 16-bit value for index
+				String line3 = "@" + index;
+				// Add LCL + the 16-bit value calculated
+				// to get the memory location inside Local
+				// Call it Local[x]
+				String line4 = "D = D + A";
+				// Access RAM[13] location
+				String line5 = "@R13";
+				// Save Local[x] address at R13
+				String line6 = "M = D";
+				// Call stack pointer
+				String line7 = "@SP";
+				// Decrement value of stack point
+				// Should now point to value @ top of stack
+				String line8 = "AM = M - 1";
+				// Save the value @ top of stack
+				String line9 = "D = M";
+				// Access RAM[13] location
+				String line10 = "@R13";
+				// Save the address Local[x] in A register
+				// Should now point to address of Local[x]
+				String line11 = "A = M";
+				// Save value from the top of the stack
+				// in the location at address Local[x]
+				String line12 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+				outputStream.println(line10);
+				outputStream.println(line11);
+				outputStream.println(line12);
+			}
+			
+			else if (segment.contains("argument"))
+			{
+				String line1 = "@ARG";
+				String line2 = "D = M";
+				String line3 = "@" + index;
+				String line4 = "D = D + A";
+				String line5 = "@R13";
+				String line6 = "M = D";
+				String line7 = "@SP";
+				String line8 = "AM = M - 1";
+				String line9 = "D = M";
+				String line10 = "@R13";
+				String line11 = "A = M";
+				String line12 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+				outputStream.println(line10);
+				outputStream.println(line11);
+				outputStream.println(line12);
+			}
+			
+			else if (segment.contains("this"))
+			{
+				String line1 = "@THIS";
+				String line2 = "D = M";
+				String line3 = "@" + index;
+				String line4 = "D = D + A";
+				String line5 = "@R13";
+				String line6 = "M = D";
+				String line7 = "@SP";
+				String line8 = "AM = M - 1";
+				String line9 = "D = M";
+				String line10 = "@R13";
+				String line11 = "A = M";
+				String line12 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+				outputStream.println(line10);
+				outputStream.println(line11);
+				outputStream.println(line12);
+			}
+			
+			else if (segment.contains("that"))
+			{
+				String line1 = "@THAT";
+				String line2 = "D = M";
+				String line3 = "@" + index;
+				String line4 = "D = D + A";
+				String line5 = "@R13";
+				String line6 = "M = D";
+				String line7 = "@SP";
+				String line8 = "AM = M - 1";
+				String line9 = "D = M";
+				String line10 = "@R13";
+				String line11 = "A = M";
+				String line12 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+				outputStream.println(line10);
+				outputStream.println(line11);
+				outputStream.println(line12);
+			}
+			
+			else if (segment.contains("temp"))
+			{
+				
+			}
+			
+			else if (segment.contains("static"))
+			{
+				String line1 = "@" + fileName + "." + index;
+				String line2 = "D = A";
+				String line3 = "@R13";
+				String line4 = "M = D";
+				String line5 = "@SP";
+				String line6 = "AM = M - 1";
+				String line7 = "D = M";
+				String line8 = "@R13";
+				String line9 = "A = M";
+				String line10 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+				outputStream.println(line10);
 			}
 		}
 	}
