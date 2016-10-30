@@ -13,7 +13,7 @@ public class CodeWriter
 	{
 		try 
 		{
-			fileLocation = file;
+			fileLocation = file.substring(0,file.lastIndexOf('.')) + ".asm";
 			outputStream = new PrintWriter(fileLocation);
 			labelCounter = 1;
 			int start, index = fileLocation.length() - 1;
