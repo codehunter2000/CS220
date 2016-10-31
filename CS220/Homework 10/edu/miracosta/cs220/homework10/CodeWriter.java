@@ -7,7 +7,7 @@ public class CodeWriter
 {
 	private String fileLocation, fileName;
 	private PrintWriter outputStream;
-	private int labelCounter;
+	private static int labelCounter = 1;
 	
 	public CodeWriter(String file)
 	{
@@ -15,7 +15,6 @@ public class CodeWriter
 		{
 			fileLocation = file.substring(0,file.lastIndexOf('.')) + ".asm";
 			outputStream = new PrintWriter(fileLocation);
-			labelCounter = 1;
 			int start, index = fileLocation.length() - 1;
 			char letter;
 			if (fileLocation.contains("/") || fileLocation.contains("\\"))
@@ -77,7 +76,7 @@ public class CodeWriter
 		else if (command.contains("neg"))
 		{
 			String line1 = "@SP";
-			String line2 = "AM = M - 1";
+			String line2 = "A = M - 1";
 			String line3 = "M = -M";
 			outputStream.println(line1);
 			outputStream.println(line2);
@@ -87,23 +86,26 @@ public class CodeWriter
 		else if (command.contains("eq"))
 		{
 			String line1 = "@SP";
-			String line2 = "A = M - 1";
-			String line3 = "A = M - 1";
-			String line4 = "D = M";
-			String line5 = "A = A + 1";
-			String line6 = "D = D - M";
-			String line7 = "@_1";
-			String line8 = "D;JEQ";
-			String line9 = "@_2";
-			String line10 = "D = 0";
-			String line11 = "0;JMP";
-			String line12 = "(_1)";
-			String line13 = "D = -1";
-			String line14 = "(_2)";
-			String line15 = "@SP";
-			String line16 = "AM = M - 1";
-			String line17 = "A = A - 1";
-			String line18 = "M = D";
+			String line2 = "AM = M - 1";
+			String line3 = "D = M";
+			String line4 = "A = A - 1";
+			String line5 = "D = M - D";
+			String line6 = "@_" + labelCounter;
+			labelCounter++;
+			String line7 = "D;JEQ";
+			String line8 = "@SP";
+			String line9 = "A = M - 1";
+			String line10 = "M = 0";
+			String line11 = "@_" + labelCounter;
+			labelCounter--;
+			String line12 = "0;JMP";
+			String line13 = "(_" + labelCounter + ")";
+			labelCounter++;
+			String line14 = "@SP";
+			String line15 = "A = M - 1";
+			String line16 = "M = -1";
+			String line17 = "(_" + labelCounter + ")";
+			labelCounter++;
 			outputStream.println(line1);
 			outputStream.println(line2);
 			outputStream.println(line3);
@@ -121,31 +123,31 @@ public class CodeWriter
 			outputStream.println(line15);
 			outputStream.println(line16);
 			outputStream.println(line17);
-			outputStream.println(line18);
 		}
 		
 		else if (command.contains("gt"))
 		{
 			String line1 = "@SP";
-			// Might be A = A - 1
-			String line2 = "A = M - 1";
-			String line3 = "A = A - 1";
-			String line4 = "D = M";
-			String line5 = "A = A + 1";
-			String line6 = "D = D - M";
-			String line7 = "@_" + labelCounter;
-			String line8 = "D;JGT";
-			String line9 = "@_" + labelCounter+1;
-			String line10 = "D = 0";
-			String line11 = "0;JMP";
-			String line12 = "(_" + labelCounter + ")";
+			String line2 = "AM = M - 1";
+			String line3 = "D = M";
+			String line4 = "A = A - 1";
+			String line5 = "D = M - D";
+			String line6 = "@_" + labelCounter;
 			labelCounter++;
-			String line13 = "D = -1";
-			String line14 = "(_" + labelCounter + ")";
-			String line15 = "@SP";
-			String line16 = "AM = M - 1";
-			String line17 = "A = A - 1";
-			String line18 = "M = D";
+			String line7 = "D;JGT";
+			String line8 = "@SP";
+			String line9 = "A = M - 1";
+			String line10 = "M = 0";
+			String line11 = "@_" + labelCounter;
+			labelCounter--;
+			String line12 = "0;JMP";
+			String line13 = "(_" + labelCounter + ")";
+			labelCounter++;
+			String line14 = "@SP";
+			String line15 = "A = M - 1";
+			String line16 = "M = -1";
+			String line17 = "(_" + labelCounter + ")";
+			labelCounter++;
 			outputStream.println(line1);
 			outputStream.println(line2);
 			outputStream.println(line3);
@@ -163,30 +165,31 @@ public class CodeWriter
 			outputStream.println(line15);
 			outputStream.println(line16);
 			outputStream.println(line17);
-			outputStream.println(line18);
 		}
 		
 		else if (command.contains("lt"))
 		{
 			String line1 = "@SP";
-			String line2 = "A = M - 1";
-			String line3 = "A = A - 1";
-			String line4 = "D = M";
-			String line5 = "A = A + 1";
-			String line6 = "D = D - M";
-			String line7 = "@_" + labelCounter;
-			String line8 = "D;JLT";
-			String line9 = "@_" + labelCounter+1;
-			String line10 = "D = 0";
-			String line11 = "0;JMP";
-			String line12 = "(_" + labelCounter + ")";
+			String line2 = "AM = M - 1";
+			String line3 = "D = M";
+			String line4 = "A = A - 1";
+			String line5 = "D = M - D";
+			String line6 = "@_" + labelCounter;
 			labelCounter++;
-			String line13 = "D = -1";
-			String line14 = "(_" + labelCounter + ")";
-			String line15 = "@SP";
-			String line16 = "AM = M - 1";
-			String line17 = "A = A - 1";
-			String line18 = "M = D";
+			String line7 = "D;JLT";
+			String line8 = "@SP";
+			String line9 = "A = M - 1";
+			String line10 = "M = 0";
+			String line11 = "@_" + labelCounter;
+			labelCounter--;
+			String line12 = "0;JMP";
+			String line13 = "(_" + labelCounter + ")";
+			labelCounter++;
+			String line14 = "@SP";
+			String line15 = "A = M - 1";
+			String line16 = "M = -1";
+			String line17 = "(_" + labelCounter + ")";
+			labelCounter++;
 			outputStream.println(line1);
 			outputStream.println(line2);
 			outputStream.println(line3);
@@ -204,45 +207,40 @@ public class CodeWriter
 			outputStream.println(line15);
 			outputStream.println(line16);
 			outputStream.println(line17);
-			outputStream.println(line18);
 		}
 		
 		else if (command.contains("and"))
 		{
 			String line1 = "@SP";
-			String line2 = "A = A - 1";
-			String line3 = "A = A - 1";
-			String line4 = "D = M";
-			String line5 = "A = A + 1";
-			String line6 = "D = D&M";
+			String line2 = "AM = M - 1";
+			String line3 = "D = M";
+			String line4 = "A = A - 1";
+			String line5 = "M = M&D";
 			outputStream.println(line1);
 			outputStream.println(line2);
 			outputStream.println(line3);
 			outputStream.println(line4);
 			outputStream.println(line5);
-			outputStream.println(line6);
 		}
 		
 		else if (command.contains("or"))
 		{
 			String line1 = "@SP";
-			String line2 = "A = A - 1";
-			String line3 = "A = A - 1";
-			String line4 = "D = M";
-			String line5 = "A = A + 1";
-			String line6 = "D = D|M";
+			String line2 = "AM = M - 1";
+			String line3 = "D = M";
+			String line4 = "A = A - 1";
+			String line5 = "M = M|D";
 			outputStream.println(line1);
 			outputStream.println(line2);
 			outputStream.println(line3);
 			outputStream.println(line4);
 			outputStream.println(line5);
-			outputStream.println(line6);
 		}
 		
 		else if (command.contains("not"))
 		{
 			String line1 = "@SP";
-			String line2 = "A = A - 1";
+			String line2 = "A = M - 1";
 			String line3 = "D = !M";
 			outputStream.println(line1);
 			outputStream.println(line2);
