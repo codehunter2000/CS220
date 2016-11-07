@@ -371,6 +371,62 @@ public class CodeWriter
 				outputStream.println(line8);
 				outputStream.println(line9);
 			}
+			
+			else if (segment.contains("pointer"))
+			{
+				if (index == 0)
+				{
+					String line1 = "@THIS";
+					String line2 = "D = M";
+					String line3 = "@SP";
+					String line4 = "AM = M + 1";
+					String line5 = "A = A - 1";
+					String line6 = "M = D";
+					outputStream.println(line1);
+					outputStream.println(line2);
+					outputStream.println(line3);
+					outputStream.println(line4);
+					outputStream.println(line5);
+					outputStream.println(line6);					
+				}
+				else
+				{
+					String line1 = "@THAT";
+					String line2 = "D = M";
+					String line3 = "@SP";
+					String line4 = "AM = M + 1";
+					String line5 = "A = A - 1";
+					String line6 = "M = D";
+					outputStream.println(line1);
+					outputStream.println(line2);
+					outputStream.println(line3);
+					outputStream.println(line4);
+					outputStream.println(line5);
+					outputStream.println(line6);
+				}
+			}
+			
+			else if (segment.contains("temp"))
+			{
+				String line1 = "@R5";
+				String line2 = "D = A";
+				String line3 = "@" + index;
+				String line4 = "A = D + A";
+				String line5 = "D = M";
+				String line6 = "@SP";
+				String line7 = "AM = M + 1";
+				String line8 = "A = A - 1";
+				String line9 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+			}
 		}
 		
 		else if (command.contains("pop"))
@@ -506,7 +562,30 @@ public class CodeWriter
 			
 			else if (segment.contains("temp"))
 			{
-				
+				String line1 = "@R5";
+				String line2 = "D = A";
+				String line3 = "@" + index;
+				String line4 = "D = D + A";
+				String line5 = "@R13";
+				String line6 = "M = D";
+				String line7 = "@SP";
+				String line8 = "AM = M - 1";
+				String line9 = "D = M";
+				String line10 = "@R13";
+				String line11= "A = M";
+				String line12 = "M = D";
+				outputStream.println(line1);
+				outputStream.println(line2);
+				outputStream.println(line3);
+				outputStream.println(line4);
+				outputStream.println(line5);
+				outputStream.println(line6);
+				outputStream.println(line7);
+				outputStream.println(line8);
+				outputStream.println(line9);
+				outputStream.println(line10);
+				outputStream.println(line11);
+				outputStream.println(line12);
 			}
 			
 			else if (segment.contains("static"))
@@ -531,6 +610,57 @@ public class CodeWriter
 				outputStream.println(line8);
 				outputStream.println(line9);
 				outputStream.println(line10);
+			}
+			
+			else if (segment.contains("pointer"))
+			{
+				if (index == 0)
+				{
+					String line1 = "@THIS";
+					String line2 = "D = A";
+					String line3 = "@R13";
+					String line4 = "M = D";
+					String line5 = "@SP";
+					String line6 = "AM = M - 1";
+					String line7 = "D = M";
+					String line8 = "@R13";
+					String line9 = "A = M";
+					String line10 = "M = D";
+					outputStream.println(line1);
+					outputStream.println(line2);
+					outputStream.println(line3);
+					outputStream.println(line4);
+					outputStream.println(line5);
+					outputStream.println(line6);
+					outputStream.println(line7);
+					outputStream.println(line8);
+					outputStream.println(line9);
+					outputStream.println(line10);
+				}
+				
+				else 
+				{
+					String line1 = "@THAT";
+					String line2 = "D = A";
+					String line3 = "@R13";
+					String line4 = "M = D";
+					String line5 = "@SP";
+					String line6 = "AM = M - 1";
+					String line7 = "D = M";
+					String line8 = "@R13";
+					String line9 = "A = M";
+					String line10 = "M = D";
+					outputStream.println(line1);
+					outputStream.println(line2);
+					outputStream.println(line3);
+					outputStream.println(line4);
+					outputStream.println(line5);
+					outputStream.println(line6);
+					outputStream.println(line7);
+					outputStream.println(line8);
+					outputStream.println(line9);
+					outputStream.println(line10);
+				}
 			}
 		}
 	}

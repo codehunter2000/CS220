@@ -101,13 +101,6 @@ public class Parser
 	
 	private void clean()
 	{
-//		int commentLocation = 0;
-//		commentLocation = rawLine.indexOf("//");
-//		
-//		if (commentLocation != -1)
-//			cleanLine = rawLine.substring(0, commentLocation);
-//		
-//		cleanLine = cleanLine.replaceAll("//", "");
 		cleanLine = rawLine;
 	}
 	
@@ -229,7 +222,8 @@ public class Parser
 				letter = cleanLine.charAt(stop);
 				if (Character.isWhitespace(letter))
 				{
-					arg1 = cleanLine.substring(start, stop);				
+					arg1 = cleanLine.substring(start, stop);
+					arg1 = arg1.trim();
 					break;
 				}
 				

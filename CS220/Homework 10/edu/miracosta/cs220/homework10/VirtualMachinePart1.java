@@ -21,15 +21,11 @@ public class VirtualMachinePart1
 			{
 				arg1 = parser.getArg1();
 				arg2 = parser.getArg2();
-//				System.out.println("Current command: " + currentCommand);
-//				System.out.println("Argument 1: " + arg1);
-//				System.out.println("Argument 2: " + arg2);
 				writer.writePopPush(currentCommand, arg1, arg2);
 			}
 			
 			else
 			{
-//				System.out.println("Current Command: " + currentCommand);
 				writer.writeArithmetic(currentCommand);
 			}
 		}
