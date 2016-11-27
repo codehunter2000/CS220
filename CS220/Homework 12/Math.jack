@@ -1,21 +1,33 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/12/Math.jack
 
-/**
- * A library of commonly used mathematical functions.
- * Note: Jack compilers implement multiplication and division using OS method calls.
- */
-class Math {
+class Math 
+{
+	static Array bits;
 
-    /** Initializes the library. */
+    // Initializes the library.
     function void init() 
     {
-	
+	let bits = Array.new(16);
+	let bits[0] = 1;
+	let bits[1] = 2;
+	let bits[2] = 4;
+	let bits[3] = 8;
+	let bits[4] = 16;
+	let bits[5] = 32;
+	let bits[6] = 64;
+	let bits[7] = 128;
+	let bits[8] = 256;
+	let bits[9] = 512;
+	let bits[10] = 1024;
+	let bits[11] = 2048;
+	let bits[12] = 4096;
+	let bits[13] = 8192;
+	let bits[14] = 16384;
+	let bits[15] = 16384 + 16384;
+
+	return;
     }
 
-    /** Returns the absolute value of x. */
+    // Returns the absolute value of x.
     function int abs(int x) 
     {
 	if (x > 0)
@@ -23,39 +35,116 @@ class Math {
 		return x;
 	}
 
-	else if (x < 0)
+	else
 	{
-		return (-1)(x);
+		return -x;
 	}
     }
 
-    /** Returns the product of x and y. 
-     *  When a Jack compiler detects the multiplication operator '*' in the 
-     *  program's code, it handles it by invoking this method. In other words,
-     *  the Jack expressions x*y and multiply(x,y) return the same value.
-     */
+    // Returns the product of x and y. 
+    //  When a Jack compiler detects the multiplication operator '*' in the 
+    //  program's code, it handles it by invoking this method. In other words,
+    //  the Jack expressions x*y and multiply(x,y) return the same value.
     function int multiply(int x, int y) 
     {
-	
+	var int sum, xShift, i;
+
+	if (x < 0)
+	{
+		return -Math.multiply(-x, y);
+	}
+
+	if (y < 0)
+	{
+		return -Math.multiply(x, -y);
+	}
+
+	let sum = 0;
+	let xShift = 0;
+	let i = 0;
+
+	while (i < 16)
+	{
+		if (bits[i] & y)
+		{
+			let sum = sum + xShift;
+		}
+
+		let xShift = xShift + xShift;
+
+		let i = i + 1;
+	}
+
+	return sum;
     }
 
-    /** Returns the integer part of x/y.
-     *  When a Jack compiler detects the multiplication operator '/' in the 
-     *  program's code, it handles it by invoking this method. In other words,
-     *  the Jack expressions x/y and divide(x,y) return the same value.
-     */
+    // Returns the integer part of x/y.
+    //  When a Jack compiler detects the multiplication operator '/' in the 
+    //  program's code, it handles it by invoking this method. In other words,
+    //  the Jack expressions x/y and divide(x,y) return the same value.
+    
     function int divide(int x, int y) 
     {
+	var int i;
 
+	if (y = 0)
+	{
+		do Sys.error(3);
+	}
+
+	if (x < 0)
+	{
+		return -Math.divide(-x, y);
+	}
+
+	if (y < 0)
+	{
+		return -Math.divide(x, -y);
+	}
+
+	if (y > x)
+	{
+		return 0;
+	}
+
+	let i = Math.divide(x, y + y);
+
+	if ((x - (2 * i * y)) < y)
+	{
+		return i + i;
+	}
+
+	else 
+	{
+		return i + i + 1;
+	}
     }
 
-    /** Returns the integer part of the square root of x. */
+    // Returns the integer part of the square root of x.
     function int sqrt(int x) 
     {
+	var int i, j, app, appSQ;
 
+	let i = 7;
+	let j = 0;
+
+	while (~(j < 0))
+	{
+		let app = j + bits[i];
+		let appSQ = app * app;
+
+		if ( ~(appSQ > x) & (appSQ > 0))
+		{
+			let j = app;
+		}
+
+		let i = i - 1;
+	}
+
+	return j;
     }
 
-    /** Returns the greater number. */
+    // Returns the greater number.
     function int max(int a, int b) 
     {
 	if (a > b)
@@ -63,18 +152,28 @@ class Math {
 		return a;
 	}
 
-	else if (b > a)
+	if (b > a)
 	{
 		return b;
 	}
 
-	else if (a == b)
+	else
 	{
 		return a;
 	}
     }
 
-    /** Returns the smaller number. */
-    function int min(int a, int b) {
+    // Returns the smaller number.
+    function int min(int a, int b) 
+    {
+	if (a > b)
+	{
+		return b;
+	}
+
+	else
+	{
+		return a;
+	}
     }
 }

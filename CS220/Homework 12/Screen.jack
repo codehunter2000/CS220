@@ -10,34 +10,227 @@
  * the screen is indexed (0,0).
  */
 class Screen {
+	static boolean bw;
+	static Array bit_masks;
 
     /** Initializes the Screen. */
     function void init() {
+	let bw = true;
+
+	let bit_masks = Array.new(16);
+   	let bit_masks[0]  = 1;
+	let bit_masks[1]  = 2;
+	let bit_masks[2]  = 4;
+	let bit_masks[3]  = 8;
+	let bit_masks[4]  = 16;
+	let bit_masks[5]  = 32;
+	let bit_masks[6]  = 64;
+	let bit_masks[7]  = 128;
+	let bit_masks[8]  = 256;
+	let bit_masks[9]  = 512;
+	let bit_masks[10] = 1024;
+	let bit_masks[11] = 2048;
+	let bit_masks[12] = 4096;
+	let bit_masks[13] = 8192;
+	let bit_masks[14] = 16384;
+	let bit_masks[15] = 16384 + 16384;
+
+	return;
+
     }
 
     /** Erases the entire screen. */
     function void clearScreen() {
+	do Screen.setColor(false);
+	do Screen.drawRectangle(0,0,551,255);
+	do Screen.setColor(true);
+
+	return;
     }
 
     /** Sets the current color, to be used for all subsequent drawXXX commands.
      *  Black is represented by true, white by false. */
     function void setColor(boolean b) {
+	
+	let bw = b;
+
+	return;
     }
 
     /** Draws the (x,y) pixel, using the current color. */
     function void drawPixel(int x, int y) {
+	var int val, adr, col, row, bit;
+
+	let row = y;
+	let col = x;
+
+	if ((col < 0) | (col > 511) | (row < 0) | (row > 255))
+	{
+		do Sys.error(7);
+	}
+
+	let bit = col - ((col / 16) * 16);
+
+	let adr = 16384 + (row * 32) + (col / 16);
+
+	let val = Memory.peek(adr);
+
+	if (bw)
+	{
+		let val= val| bit_masks[bit];
+	}
+
+	else
+	{
+		let val = val & ~bit_masks[bit];
+	}
+
+	do Memory.poke(adr, val);
+
+	return;
     }
 
     /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
     function void drawLine(int x1, int y1, int x2, int y2) {
+	var int a, b, a_inc, b_inc, dx, dy, criterion, temp;
+
+	if ((x1 < 0) | (x1 > 511) | (y1 < 0) | (y1 > 255) |(x2 < 0) | (x2 > 511) | (y2 < 0) | (y2 > 255))
+	{
+		do Sys.error(8);
+	}
+
+	let a = 0;
+	let b = 0;
+
+	if (~(x1 < x2))
+	{
+		let temp = x1;
+		let x1 = x2;
+		let x2 = temp;
+		let temp = y1;
+		let y1 = y2;
+		let y2 = temp;
+	}
+
+	let dx = x2-x1;
+	let dy = y2-y1;
+
+	if (dy < 0)
+	{
+		let b_inc = -1;
+	}
+
+	else
+	{
+		let b_inc = 1;
+	}
+
+	if (dy = 0)
+	{
+		while (~(a = dx))
+		{
+			let a = a + 1;
+			do Screen.drawPixel(x1 + a, y1);
+		}
+		
+		return;
+	}
+
+	while ((a < dx) & (b < dy))
+	{
+		let criterion = (a * dy) - (b * dx);
+		if (criterion < 0)
+		{
+			let a = a + 1;
+		}
+
+		else 
+		{
+			let b = b + 1;
+		}
+
+		do Screen.drawPixel(x1 + a, y1 + b);
+	}
+
+	while ((a < dx) & (b > dy))
+	{
+		let criterion = (a * dy) - (b * dx);
+
+		if (criterion > 0)
+		{
+			let a = a + 1;
+		}
+
+		else 
+		{
+			let b = b - 1;
+		}
+
+		do Screen.drawPixel(x1 + a, y1 + b);
+	}
+
+	return;
     }
 
     /** Draws a filled rectangle whose top left corner is (x1, y1)
      * and bottom right corner is (x2,y2), using the current color. */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
+	var int temp, dy, dx, a, b;
+
+	if ((x1 < 0) | (x1 > 511) | (y1 < 0) | (y1 > 255) | (x2 < 0) | (x2 > 511) | (y2 < 0) | (y2 > 255) | (x1 > x2) | (y1 > y2))
+	{
+		do Sys.error(9);
+	}
+
+	let a = 0;
+	let b = 0;
+
+	let dx = x2 - x1;
+	let dy = y2 - y1;
+
+	while (b < dy)
+	{
+		while (a < dx)
+		{
+			do Screen.drawPixel(x1 + a, y1 + b);
+			let a = a + 1;
+		}
+
+		let a = 0;
+		let b = b + 1;
+	}
+
+	return;
     }
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
     function void drawCircle(int x, int y, int r) {
+	var int y, x1, x2, sQ, dy;
+
+	if ((x < 0) | (x > 511) | (y < 0) | (y > 255))
+	{
+		do Sys.error(12);
+	}
+
+	if ((r < 0) | (r > 127) | ((x - r) < 0) | ((x + r) > 511) | ((y - r) < 0) | ((y + r) > 255))
+	{
+		do Sys.error(13);
+	}
+
+	let dy = -r;
+
+	while (~(dy = r))
+	{
+		let sQ = Math.sqrt((r * r) - (dy * dy));
+		let x1 = x - sQ;
+		let x2 = x + sQ;
+		let y = y + dy;
+
+		do Screen.drawLine(x1, y, x2, y);
+
+		let dy = dy + 1;
+	}
+
+	return;
     }
 }

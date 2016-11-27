@@ -10,7 +10,7 @@
  * syntax arr[i]. Each array entry can hold a primitive data type as 
  * well as any object type. Different array entries can have different 
  * data types.
- * /
+ */
 class Array {
 
     /** Constructs a new Array of the given size. */
