@@ -1,61 +1,71 @@
 class Memory {
-	static Array freeMem;
-	static int base, length, next;
+	static Array freeMem, memory;
 	
-
     // Initializes the class.
     function void init() {
-	let base = 2048;
-	let length = 0;
-	let next = 1;
-	let freeMem = base;
-	let freeMem[length] = 14335;
-	let freeMem[next] = null;
+	let memory = 0;
+	let freeMem = 2048;
+	let freeMem[0] = 16383-2048;
+	let freeMem[1] = 0;
 	return;
     }
 
     // Returns the RAM value at the given address.
     function int peek(int address) {
-	var Array memory;
-	let memory = address;
-	return memory[0];
+	return memory[address];
     }
 
     // Sets the RAM value at the given address to the given value.
     function void poke(int address, int value) {
-	var Array memory;
-	let memory = address;
-	let memory[0] = value;
+	let memory[address] = value;
 	return;
     }
 
     // Finds an available RAM block of the given size and returns
     //  a reference to its base address.
     function int alloc(int size) {
-	var int go;
+	var Array actual, block;
+	var int found, actual_size;
 
-	let go = base;
-	let base = base + size;
-	return go;
+	let found = 0;
+	let actual = freeMem;
+	while (found = 0)
+	{
+		if (actual[0] > (size+1))
+		{
+			let found = 1;
+		}
+
+		else
+		{
+			if (actual[1] = 0)
+			{
+				do Sys.error(5);
+				return 0;
+			}
+
+			let actual = actual[1];
+		}
+	}
+
+	let actual_size = actual[0] - (size + 1);
+		
+	if (actual_size < 30)
+	{
+		return actual + 1;
+	}
+
+	let actual[0] = actual_size;
+	let block = actual + actual_size;
+	let block[0] = size + 1;
+
+	return block + 1;
     }
 
     // De-allocates the given object (cast as an array) by making
     // it available for future allocations.
     function void deAlloc(Array o) {
-	var Array block;
-
-	if (freeMem > o)
-	{
-		return;
-	}
-
-	let block = freeMem;
-
-	while (~(block[next] = null) & (block[next] < o))
-	{
-		let block = block[next];
-	}
-
+	
 	return;
 	
     }    
